@@ -1,0 +1,36 @@
+{
+  "name": "js-30",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TetianaTG/node-js-30.git"
+  },
+  "keywords": [
+    "1111"
+  ],
+  "author": "Tetiana",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "db/*"
+    ]
+  },
+  "dependencies": {
+    "yargs": "^15.3.1"
+  },
+  "bugs": {
+    "url": "https://github.com/TetianaTG/node-js-30/issues"
+  },
+  "homepage": "https://github.com/TetianaTG/node-js-30#readme"
+}
