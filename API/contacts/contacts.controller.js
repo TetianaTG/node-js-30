@@ -1,12 +1,24 @@
-const fs = require("fs");
-const path = require("path");
-const Joi = require("@hapi/joi");
-const { string } = require("@hapi/joi");
-const isEmpty = require("lodash.isempty");
-const { promises: fsPromises } = fs;
+const Joi = require('@hapi/joi');
+const isEmpty = require('lodash.isempty');
+const contactsModel = require('./contacts.model');
 
-const contactsPath = path.join(__dirname, "../../db/contacts.json");
+const postValidation = {
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+  subscription: Joi.string(),
+  password: Joi.string(),
+  token: Joi.string().empty(''),
+};
 
+const patchValidation = {
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+  subscription: Joi.string(),
+  password: Joi.string(),
+  token: Joi.string().empty(''),
+};
 
 class ContactsController {
   get getContacts() {
@@ -25,99 +37,63 @@ class ContactsController {
     return this._updateContact.bind(this);
   }
 
-  async listContacts(res) {
-    try {
-      const data = await fsPromises.readFile(contactsPath, "utf-8");
-      return JSON.parse(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async editContacts(res, data) {
-    try {
-      return await fsPromises.writeFile(contactsPath, JSON.stringify(data, null, 2));
-    } catch ({ status, message }) {
-      res.status(status).send(message);
-    }
-  }
-
-  async findContact(res, id) {
-    try {
-      const contacts = await this.listContacts();
-      const contact = contacts.find((contact) => contact.id === id);
-
-      if (!contact) {
-        throw new NotFoundError("Not found");
-      }
-
-      return contact;
-    } catch (err) {
-      res.status(404).send(err.message);
-    }
-  }
-
-  validateAddUser(req, res, next) {
-    const schema = Joi.object({
-      name: Joi.string().required(),
-      email: Joi.string().required(),
-      phone: Joi.string().required(),
-    });
+  validateAddContact(req, res, next) {
+    const schema = Joi.object(postValidation);
     const validation = schema.validate(req.body);
 
-    if (validation.error) {
-      return res.status(400).send(validation.error.message);
-    }
+    if (validation.error) return handleValidationError(res, validation);
+
     next();
   }
 
-  validateUpdateUser(req, res, next) {
-    const schema = Joi.object({
-      name: Joi.string(),
-      email: Joi.string(),
-      phone: Joi.string(),
-    });
+  validateUpdateContact(req, res, next) {
+    const schema = Joi.object(patchValidation);
     const validation = schema.validate(req.body);
 
-    if (validation.error) {
-      return res.status(400).send(validation.error.message);
-    }
+    if (validation.error) return handleValidationError(res, validation);
+
     next();
   }
 
   // GET
   async _getContacts(req, res) {
     try {
-      const contacts = await this.listContacts();
+      const contacts = await contactsModel.find();
 
       res.status(200).send(contacts);
     } catch (err) {
-      res.status(err.status).send(err.message);
+      res.status(400).send(err.message);
     }
   }
 
   async _getContact(req, res) {
     try {
       const { contactid } = req.params;
-      const targetContact = await this.findContact(res, +contactid);
+      const contact = await contactsModel.findById(contactid);
 
-      res.status(200).send(targetContact);
+      res.status(200).send(contact);
     } catch (err) {
-      res.status(err.status).send(err);
+      res.status(400).send(err.message);
     }
   }
 
   // POST
   async _addContact(req, res) {
     try {
-      const contacts = await this.listContacts();
-      const newContact = { ...req.body, id: contacts.length + 1 };
-      contacts.push(newContact);
-      this.editContacts(res, contacts);
+      const newContact = { ...req.body };
+      const existedContact = await contactsModel.findOne({
+        email: newContact.email,
+      });
 
-      res.status(200).send(req.body);
-    } catch ({ status, message }) {
-      res.status(status).send(message);
+      if (existedContact)
+        return res.status(400).send('Contact with such email already exists');
+
+      await contactsModel.create(newContact, (err, contact) => {
+        if (!err)
+          return res.status(200).send(`Contact ${contact.name} created`);
+      });
+    } catch (err) {
+      res.status(400).send(err.message);
     }
   }
 
@@ -125,43 +101,39 @@ class ContactsController {
   async _removeContact(req, res) {
     try {
       const { contactid } = req.params;
-      const contacts = await this.listContacts();
-      const targetContact = await this.findContact(res, +contactid);
-      const newContacts = contacts.filter((contact) => contact.id !== targetContact.id);
-      await this.editContacts(res, newContacts);
 
-      res.status(200).send(newContacts);
+      await contactsModel.findByIdAndRemove(contactid, function (err) {
+        if (!err) return res.status(200).send(`Contact deleted`);
+      });
+
+      res.status(200).send();
     } catch (err) {
-      res.status(400).send();
+      res.status(400).send(err.message);
     }
   }
 
   // PATCH
   async _updateContact(req, res) {
     try {
-      const id = parseInt(req.params.contactid);
-      const contacts = await this.listContacts();
-      const index = contacts.findIndex((contact) => contact.id === id);
+      const { contactid } = req.params;
+      const updatedContact = { ...req.body };
 
-      if (!contacts[index]) throw new NotFoundError("Not found");
-      if (isEmpty(req.body)) return res.status(404).send("missing fields");
+      if (isEmpty(req.body)) return res.status(404).send('missing fields');
 
-      contacts[index] = { ...contacts[index], ...req.body };
-      await this.editContacts(res, contacts);
-      res.status(200).send(contacts);
+      const newContact = await contactsModel.findByIdAndUpdate(
+        contactid,
+        updatedContact,
+        { new: true },
+      );
+
+      res.status(200).send(newContact);
     } catch (err) {
-      res.status(err.status).send(err.message);
+      res.status(400).send(err.message);
     }
   }
 }
 
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-
-    this.status = 404;
-    delete this.stack;
-  }
+function handleValidationError(res, val) {
+  return res.status(400).send(val.error.message);
 }
-
 module.exports = new ContactsController();
