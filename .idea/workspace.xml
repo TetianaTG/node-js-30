@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand />
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="msg 4 homework">
+      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/node-js-30-2.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/start.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/users/users.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/users/users.model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/users/users.router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/validation/validation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contacts.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test16@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test17@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test18@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test19@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test20@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test3@mail.com.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/avatar-test@mail.com.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/acceptence-test.spec.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test.spec.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test17@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test18@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test19@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test20@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test3@mail.com.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test3@mail.com.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tmp/avatar-test@mail.com.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/contacts/contacts.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/contacts/contacts.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/contacts/contacts.router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1iur87rskxMnX3XBahV72TCS39n" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="" />
+      <created>1602768155515</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602768155515</updated>
+      <workItem from="1602768156621" duration="1577000" />
+      <workItem from="1602789447420" duration="20000" />
+      <workItem from="1602789612619" duration="2117000" />
+      <workItem from="1602792154299" duration="69000" />
+    </task>
+    <task id="LOCAL-00001" summary="msg 4 homework">
+      <created>1602768709750</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602768709751</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="msg 4 homework" />
+    <option name="LAST_COMMIT_MESSAGE" value="msg 4 homework" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="48" y="97" width="1265" height="699" key="MergeDialog" timestamp="1602768307267">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="48" y="97" width="1265" height="699" key="MergeDialog/0.23.1440.852@0.23.1440.852" timestamp="1602768307267" />
+    <state x="352" y="233" key="MultipleFileMergeDialog" timestamp="1602768310947">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="352" y="233" key="MultipleFileMergeDialog/0.23.1440.852@0.23.1440.852" timestamp="1602768310947" />
+    <state x="312" y="192" key="Vcs.Push.Dialog.v2" timestamp="1602792010935">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="312" y="192" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1602792010935" />
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602791175507">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1602791175507" />
+  </component>
+</project>
