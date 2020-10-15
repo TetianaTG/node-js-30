@@ -3,7 +3,6 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./contacts/contacts.router');
-const usersRouter = require('./users/users.router');
 
 require('dotenv').config();
 
@@ -24,7 +23,6 @@ class ContacsServer {
 
   initRoutes() {
     this.server.use('/contacts', contactsRouter);
-    this.server.use('/', usersRouter);
   }
 
   async initDatabase() {
