@@ -1,28 +1,20 @@
 {
-  "name": "hw05",
+  "name": "hw03",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node api/start.js",
-    "dev": "nodemon api/start.js",
-    "test": "mocha tests/test.spec.js",
-    "req-test": "mocha tests/acceptence-test.spec.js --exit"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
   },
   "devDependencies": {
-    "mocha": "^8.1.3",
-    "nodemon": "^2.0.4",
-    "should": "^13.2.3",
-    "sinon": "^9.2.0",
-    "supertest": "^4.0.2"
+    "nodemon": "^2.0.4"
   },
   "nodemonConfig": {
     "ignore": [
       "test/*",
-      "db/*",
-      "public/*",
-      "tmp/*",
-      "tests/*"
+      "db/*"
     ]
   },
   "keywords": [],
@@ -30,22 +22,14 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "@sendgrid/mail": "^7.3.0",
-    "avatar-builder": "^1.0.1",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "imagemin": "^7.0.1",
-    "imagemin-jpegtran": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.isempty": "^4.4.0",
     "mongoose": "^5.9.22",
     "mongoose-paginate-v2": "^1.3.9",
-    "morgan": "^1.10.0",
-    "move-file": "^2.0.0",
-    "multer": "^1.4.2",
-    "nodemailer": "^6.4.11",
-    "uuid": "^8.3.0"
+    "morgan": "^1.10.0"
   }
 }

@@ -1,28 +1,28 @@
 const express = require('express');
-const path = require('path');
-const multer = require('multer');
 const UsersControl = require('./Users.controller');
-const AuthControl = require('../auth/auth.controller');
-
 const usersRouter = express.Router();
 
-const storage = multer.diskStorage({
-  destination: './tmp',
-  filename: function (req, file, cb) {
-    const { fieldname, originalname } = file;
-    const { user } = req;
-    cb(null, fieldname + '-' + user.email + path.extname(originalname));
-  },
-});
-const upload = multer({ storage });
-
-usersRouter.get('/current', AuthControl.authorize, UsersControl.getCurrentUser);
-
-usersRouter.patch('/', AuthControl.authorize, UsersControl.updateUser);
-usersRouter.patch(
-  '/avatars',
-  AuthControl.authorize,
-  upload.single('avatar'),
-  UsersControl.updateUserAvatar,
+usersRouter.post(
+  '/auth/register',
+  UsersControl.validateAddUser,
+  UsersControl.registerUser,
 );
+
+usersRouter.post(
+  '/auth/login',
+  UsersControl.validateLoginUser,
+  UsersControl.loginUser,
+);
+
+usersRouter.post(
+  '/auth/logout',
+  UsersControl.authorize,
+  UsersControl.logoutUser,
+);
+usersRouter.get(
+  '/users/current',
+  UsersControl.authorize,
+  UsersControl.getCurrentUser,
+);
+usersRouter.patch('/users', UsersControl.authorize, UsersControl.updateUser);
 module.exports = usersRouter;
