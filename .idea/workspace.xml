@@ -5,7 +5,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="">
+    <list default="true" id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="git add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +67,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602878596396</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="git add">
+      <created>1602895845982</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1602895845983</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,7 +100,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="msg 4 homework" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="git add" />
+    <option name="LAST_COMMIT_MESSAGE" value="git add" />
   </component>
   <component name="WindowStateProjectService">
     <state x="48" y="97" width="1265" height="699" key="MergeDialog" timestamp="1602768307267">
@@ -108,21 +116,9 @@
       <screen x="0" y="23" width="1440" height="852" />
     </state>
     <state x="312" y="192" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1602880396044" />
-    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602878745877">
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603121356596">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1602878745877" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/api/contacts/contacts.controller.js</url>
-          <line>102</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1603121356596" />
   </component>
 </project>
