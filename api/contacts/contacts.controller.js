@@ -65,12 +65,11 @@ class ContactsController {
       res.status(400).send(err.message);
     }
   }
-
+// DELETE
   async _getContact(req, res) {
     try {
-      const { contactid } = req.params;
+      const {contactid} = req.params;
       const contact = await contactsModel.findById(contactid);
-
       res.status(200).send(contact);
     } catch (err) {
       res.status(400).send(err.message);
@@ -85,13 +84,13 @@ class ContactsController {
         email: newContact.email,
       });
 
-      if (existedContact)
-        return res.status(400).send('Contact with such email already exists');
+      // if (existedContact)
+       /// return res.status(400).send('Contact with such email already exists');
 
-      await contactsModel.create(newContact, (err, contact) => {
-        if (!err)
-          return res.status(200).send(`Contact ${contact.name} created`);
-      });
+      await contactsModel.create(newContact, (err, contact));
+       // if (!err)
+         // return res.status(200).send(`Contact ${contact.name} created`);
+      res.status(200).send(`Contact ${contact.name} created`);
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -100,18 +99,13 @@ class ContactsController {
   // DELETE
   async _removeContact(req, res) {
     try {
-      const { contactid } = req.params;
-
-      await contactsModel.findByIdAndRemove(contactid, function (err) {
-        if (!err) return res.status(200).send(`Contact deleted`);
-      });
-
-      res.status(200).send();
+      const {contactid} = req.params;
+      await contactsModel.findByIdAndRemove(contactid);
+      res.status(200).send('Contact deleted');
     } catch (err) {
       res.status(400).send(err.message);
     }
   }
-
   // PATCH
   async _updateContact(req, res) {
     try {

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const val = require('../validation/validation');
 
 require('dotenv').config();
-const SUBS = ['free', 'pro', 'premium'];
+const Subtitle = ['free', 'pro', 'premium'];
 
 class ContactsController {
   validateAddUser(req, res, next) {
@@ -73,14 +73,8 @@ class ContactsController {
 
       const hashedPass = await bcrypt.hash(newUser.password, 10);
 
-      usersModel.create({ ...newUser, password: hashedPass }, (err, user) => {
-        if (err) return console.log(err);
-        if (!err) {
-          return res
-            .status(201)
-            .send({ email: user.email, password: user.password });
-        }
-      });
+      usersModel.create({ ...newUser, password: hashedPass }); //(err, user));
+        res.status(201).send({ email: user.email, password: user.password });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -142,11 +136,11 @@ class ContactsController {
   async updateUser(req, res) {
     try {
       const { user } = req;
-      const i = SUBS.indexOf(user.subscription);
+      const i = Subtitle.indexOf(user.subscription);
 
       const updatedUser = await usersModel.findByIdAndUpdate(
         user._id,
-        { subscription: SUBS[i + 1] || 'premium' },
+        { subscription: Subtitle [i + 1] || 'premium' },
         { new: true, runValidators: true },
       );
 

@@ -29,20 +29,14 @@ class ContacsServer {
     try {
       await mongoose.connect(
         process.env.MONGODB_URL,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        },
-        err => {
-          if (err) {
-            console.log(err);
-            return process.exit(1);
-          }
-          console.log('Database connection successful');
-        },
-      );
+          {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          });
+      console.log('Database connection successful');
     } catch (err) {
       console.log(err);
+      process.exit(1);
     }
   }
 
