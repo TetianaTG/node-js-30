@@ -1,11 +1,45 @@
+
 const Joi = require('@hapi/joi');
 const isEmpty = require('lodash.isempty');
 const contactsModel = require('./contacts.model');
-const val = require('../validation/validation');
+
+const postValidation = {
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+  subscription: Joi.string(),
+  password: Joi.string(),
+  token: Joi.string().empty(''),
+};
+
+const patchValidation = {
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+  subscription: Joi.string(),
+  password: Joi.string(),
+  token: Joi.string().empty(''),
+};
 
 class ContactsController {
+  get getContacts() {
+    return this._getContacts.bind(this);
+  }
+  get getContact() {
+    return this._getContact.bind(this);
+  }
+  get addContact() {
+    return this._addContact.bind(this);
+  }
+  get removeContact() {
+    return this._removeContact.bind(this);
+  }
+  get updateContact() {
+    return this._updateContact.bind(this);
+  }
+
   validateAddContact(req, res, next) {
-    const schema = Joi.object(val.postValidation);
+    const schema = Joi.object(postValidation);
     const validation = schema.validate(req.body);
 
     if (validation.error) return handleValidationError(res, validation);
@@ -14,7 +48,7 @@ class ContactsController {
   }
 
   validateUpdateContact(req, res, next) {
-    const schema = Joi.object(val.patchValidation);
+    const schema = Joi.object(patchValidation);
     const validation = schema.validate(req.body);
 
     if (validation.error) return handleValidationError(res, validation);
@@ -23,32 +57,17 @@ class ContactsController {
   }
 
   // GET
-  async getContacts(req, res) {
+  async _getContacts(req, res) {
     try {
-      const { page, limit, sub: subscription } = req.query;
-      let options = { page, limit };
-      let contacts;
-      if (!page && !limit) options = null;
+      const contacts = await contactsModel.find();
 
-      await contactsModel.paginate({}, options, (err, res) => {
-        if (!err) {
-          if (subscription) {
-            const contactsBySubs = res.docs.filter(
-              contact => contact.subscription === subscription,
-            );
-            contacts = contactsBySubs;
-          } else {
-            contacts = res.docs;
-          }
-        }
-      });
       res.status(200).send(contacts);
     } catch (err) {
       res.status(400).send(err.message);
     }
   }
 
-  async getContact(req, res) {
+  async _getContact(req, res) {
     try {
       const { contactid } = req.params;
       const contact = await contactsModel.findById(contactid);
@@ -60,7 +79,7 @@ class ContactsController {
   }
 
   // POST
-  async addContact(req, res) {
+  async _addContact(req, res) {
     try {
       const newContact = { ...req.body };
       const existedContact = await contactsModel.findOne({
@@ -80,7 +99,7 @@ class ContactsController {
   }
 
   // DELETE
-  async removeContact(req, res) {
+  async _removeContact(req, res) {
     try {
       const { contactid } = req.params;
 
@@ -95,7 +114,7 @@ class ContactsController {
   }
 
   // PATCH
-  async updateContact(req, res) {
+  async _updateContact(req, res) {
     try {
       const { contactid } = req.params;
       const updatedContact = { ...req.body };
@@ -103,9 +122,9 @@ class ContactsController {
       if (isEmpty(req.body)) return res.status(404).send('missing fields');
 
       const newContact = await contactsModel.findByIdAndUpdate(
-        contactid,
-        updatedContact,
-        { new: true },
+          contactid,
+          updatedContact,
+          { new: true },
       );
 
       res.status(200).send(newContact);

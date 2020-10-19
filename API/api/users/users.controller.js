@@ -77,8 +77,8 @@ class ContactsController {
         if (err) return console.log(err);
         if (!err) {
           return res
-            .status(201)
-            .send({ email: user.email, password: user.password });
+              .status(201)
+              .send({ email: user.email, password: user.password });
         }
       });
     } catch (err) {
@@ -131,8 +131,8 @@ class ContactsController {
       const { user } = req;
 
       res
-        .status(200)
-        .send({ email: user.email, subscription: user.subscription });
+          .status(200)
+          .send({ email: user.email, subscription: user.subscription });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -145,9 +145,9 @@ class ContactsController {
       const i = SUBS.indexOf(user.subscription);
 
       const updatedUser = await usersModel.findByIdAndUpdate(
-        user._id,
-        { subscription: SUBS[i + 1] || 'premium' },
-        { new: true, runValidators: true },
+          user._id,
+          { subscription: SUBS[i + 1] || 'premium' },
+          { new: true, runValidators: true },
       );
 
       res.status(200).send(updatedUser);

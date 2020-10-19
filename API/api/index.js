@@ -3,7 +3,6 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./contacts/contacts.router');
-const usersRouter = require('./users/users.router');
 
 require('dotenv').config();
 
@@ -24,24 +23,23 @@ class ContacsServer {
 
   initRoutes() {
     this.server.use('/contacts', contactsRouter);
-    this.server.use('/', usersRouter);
   }
 
   async initDatabase() {
     try {
       await mongoose.connect(
-        process.env.MONGODB_URL,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        },
-        err => {
-          if (err) {
-            console.log(err);
-            return process.exit(1);
-          }
-          console.log('Database connection successful');
-        },
+          process.env.MONGODB_URL,
+          {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          },
+          err => {
+            if (err) {
+              console.log(err);
+              return process.exit(1);
+            }
+            console.log('Database connection successful');
+          },
       );
     } catch (err) {
       console.log(err);
