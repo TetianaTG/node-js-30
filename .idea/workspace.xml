@@ -5,18 +5,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="git add">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/users/users.controller.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/users/users.model.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/users/users.router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/validation/validation.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-    </list>
+    <list default="true" id="9570fdb0-d9c9-4235-85b8-c3ee2b9a3709" name="Default Changelist" comment="git add" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +58,7 @@
       <workItem from="1603121437098" duration="486000" />
       <workItem from="1603121947218" duration="200000" />
       <workItem from="1603122168256" duration="49000" />
-      <workItem from="1603122221265" duration="657000" />
+      <workItem from="1603122221265" duration="959000" />
     </task>
     <task id="LOCAL-00001" summary="msg 4 homework">
       <created>1602768709750</created>
@@ -99,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603121499533</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="git add">
+      <created>1603123265791</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1603123265791</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,14 +138,14 @@
       <screen x="0" y="23" width="1440" height="852" />
     </state>
     <state x="352" y="233" key="MultipleFileMergeDialog/0.23.1440.852@0.23.1440.852" timestamp="1602768310947" />
-    <state x="312" y="192" key="Vcs.Push.Dialog.v2" timestamp="1602880396044">
+    <state x="312" y="192" key="Vcs.Push.Dialog.v2" timestamp="1603123288540">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="312" y="192" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1602880396044" />
-    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603122224321">
+    <state x="312" y="192" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603123288540" />
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603123323754">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1603122224321" />
+    <state x="513" y="386" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1603123323754" />
     <state x="365" y="199" width="670" height="676" key="search.everywhere.popup" timestamp="1603121932958">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
