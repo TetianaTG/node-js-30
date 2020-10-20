@@ -1,0 +1,265 @@
+Index: API/contacts/contacts.router.js
+===================================================================
+--- API/contacts/contacts.router.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
++++ API/contacts/contacts.router.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
+@@ -1,19 +0,0 @@
+-const express = require('express');
+-const ContactsControl = require('./contacts.controller');
+-const contactsRouter = express.Router();
+-
+-contactsRouter.get('/', ContactsControl.getContacts);
+-contactsRouter.get('/:contactid', ContactsControl.getContact);
+-contactsRouter.post(
+-  '/',
+-  ContactsControl.validateAddContact,
+-  ContactsControl.addContact,
+-);
+-contactsRouter.delete('/:contactid', ContactsControl.removeContact);
+-contactsRouter.patch(
+-  '/:contactid',
+-  ContactsControl.validateUpdateContact,
+-  ContactsControl.updateContact,
+-);
+-
+-module.exports = contactsRouter;
+Index: API/index.js
+===================================================================
+--- API/index.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
++++ API/index.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
+@@ -1,65 +0,0 @@
+-const morgan = require('morgan');
+-const cors = require('cors');
+-const express = require('express');
+-const mongoose = require('mongoose');
+-const contactsRouter = require('./contacts/contacts.router');
+-
+-require('dotenv').config();
+-
+-class ContacsServer {
+-  constructor() {
+-    this.server = null;
+-  }
+-
+-  initServer() {
+-    this.server = express();
+-  }
+-
+-  initMiddlewares() {
+-    this.server.use(express.json());
+-    this.server.use(morgan('tiny'));
+-    this.server.use(cors());
+-  }
+-
+-  initRoutes() {
+-    this.server.use('/contacts', contactsRouter);
+-  }
+-
+-  async initDatabase() {
+-    try {
+-      await mongoose.connect(
+-        process.env.MONGODB_URL,
+-        {
+-          useNewUrlParser: true,
+-          useUnifiedTopology: true,
+-        },
+-        err => {
+-          if (err) {
+-            console.log(err);
+-            return process.exit(1);
+-          }
+-          console.log('Database connection successful');
+-        },
+-      );
+-    } catch (err) {
+-      console.log(err);
+-    }
+-  }
+-
+-  startListening() {
+-    const PORT = process.env.PORT;
+-    this.server.listen(PORT, () => {
+-      console.log('Server started listening on port', PORT);
+-    });
+-  }
+-
+-  async start() {
+-    this.initServer();
+-    this.initMiddlewares();
+-    this.initRoutes();
+-    await this.initDatabase();
+-    this.startListening();
+-  }
+-}
+-
+-new ContacsServer().start();
+\ No newline at end of file
+Index: API/contacts/contacts.controller.js
+===================================================================
+--- API/contacts/contacts.controller.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
++++ API/contacts/contacts.controller.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
+@@ -1,139 +0,0 @@
+-const Joi = require('@hapi/joi');
+-const isEmpty = require('lodash.isempty');
+-const contactsModel = require('./contacts.model');
+-
+-const postValidation = {
+-  name: Joi.string().required(),
+-  email: Joi.string().required(),
+-  phone: Joi.string().required(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-const patchValidation = {
+-  name: Joi.string(),
+-  email: Joi.string(),
+-  phone: Joi.string(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-class ContactsController {
+-  get getContacts() {
+-    return this._getContacts.bind(this);
+-  }
+-  get getContact() {
+-    return this._getContact.bind(this);
+-  }
+-  get addContact() {
+-    return this._addContact.bind(this);
+-  }
+-  get removeContact() {
+-    return this._removeContact.bind(this);
+-  }
+-  get updateContact() {
+-    return this._updateContact.bind(this);
+-  }
+-
+-  validateAddContact(req, res, next) {
+-    const schema = Joi.object(postValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  validateUpdateContact(req, res, next) {
+-    const schema = Joi.object(patchValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  // GET
+-  async _getContacts(req, res) {
+-    try {
+-      const contacts = await contactsModel.find();
+-
+-      res.status(200).send(contacts);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  async _getContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-      const contact = await contactsModel.findById(contactid);
+-
+-      res.status(200).send(contact);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // POST
+-  async _addContact(req, res) {
+-    try {
+-      const newContact = { ...req.body };
+-      const existedContact = await contactsModel.findOne({
+-        email: newContact.email,
+-      });
+-
+-      if (existedContact)
+-        return res.status(400).send('Contact with such email already exists');
+-
+-      await contactsModel.create(newContact, (err, contact) => {
+-        if (!err)
+-          return res.status(200).send(`Contact ${contact.name} created`);
+-      });
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // DELETE
+-  async _removeContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-
+-      await contactsModel.findByIdAndRemove(contactid, function (err) {
+-        if (!err) return res.status(200).send(`Contact deleted`);
+-      });
+-
+-      res.status(200).send();
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // PATCH
+-  async _updateContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-      const updatedContact = { ...req.body };
+-
+-      if (isEmpty(req.body)) return res.status(404).send('missing fields');
+-
+-      const newContact = await contactsModel.findByIdAndUpdate(
+-        contactid,
+-        updatedContact,
+-        { new: true },
+-      );
+-
+-      res.status(200).send(newContact);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-}
+-
+-function handleValidationError(res, val) {
+-  return res.status(400).send(val.error.message);
+-}
+-module.exports = new ContactsController();
+Index: API/contacts/contacts.model.js
+===================================================================
+--- API/contacts/contacts.model.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
++++ API/contacts/contacts.model.js	(revision a4894a871190541a7c10e25d2dfc194f9a2c7019)
+@@ -1,20 +0,0 @@
+-const mongoose = require('mongoose');
+-const Schema = mongoose.Schema;
+-
+-const contactsSchema = new Schema(
+-  {
+-    name: { type: String, required: true },
+-    email: { type: String, required: true },
+-    phone: { type: String, required: true },
+-    subscription: String,
+-    password: String,
+-    token: String,
+-  },
+-  {
+-    versionKey: false,
+-  },
+-);
+-
+-const contactsModel = mongoose.model('Contacts', contactsSchema);
+-
+-module.exports = contactsModel;
+\ No newline at end of file
