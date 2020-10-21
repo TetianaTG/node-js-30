@@ -1,6 +1,6 @@
 const request = require('supertest');
-const CS = require('../api/index');
-var should = require('should');
+const ContactServer = require('../api/index');
+const should = require('should');
 const userModel = require('../api/users/users.model');
 
 const INVALID_TOKEN = 'xxx';
@@ -12,7 +12,7 @@ describe('endpoints test', () => {
   let app;
 
   before(async () => {
-    const userServer = new CS();
+    const userServer = new ContactServer();
     app = await userServer.start();
   });
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
@@ -8,9 +9,7 @@ const val = require('../validation/validation');
 const { promises: fsPromises } = fs;
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
-
-require('dotenv').config();
-const SUBS = ['free', 'pro', 'premium'];
+const Subtitle = ['free', 'pro', 'premium'];
 
 class UsersController {
   validateAddUser(req, res, next) {
@@ -41,11 +40,11 @@ class UsersController {
 
   generateAvatars = async name => {
     try {
-      if (!fs.existsSync('./tmp')) {
-        fs.mkdirSync(location, { recursive: true });
+      if (!fs.exists('./tmp')) {
+        fs.mkdir(location, { recursive: true });
       }
 
-      const filepath = `tmp/avatar-${name}.jpg`;
+      //const filepath = `tmp/avatar-${name}.jpg`;
       const avatar = Avatar.catBuilder(128);
       const buffer = await avatar.create('gabriel');
       await fsPromises.writeFile(filepath, buffer);
@@ -58,7 +57,7 @@ class UsersController {
   async minifyImage(filepath) {
     try {
       await imagemin([filepath], {
-        destination: 'public/images',
+        // destination: 'public/images',
         plugins: [imageminJpegtran()],
       });
     } catch (err) {
@@ -105,19 +104,15 @@ class UsersController {
       const hashedPass = await bcrypt.hash(newUser.password, 10);
 
       await this.generateAvatars(newUser.email);
-      const imagePath = `localhost:3000/images/${newUser.email}.jpg`;
+      //const imagePath = `localhost:3000/images/${newUser.email}.jpg`;
 
       usersModel.create(
-        { ...newUser, password: hashedPass, avatarURL: imagePath },
-        (err, user) => {
-          if (err) return console.log(err);
-          if (!err) {
-            return res
-              .status(201)
-              .send({ email: user.email, password: user.password });
-          }
-        },
-      );
+          { ...newUser, password: hashedPass, avatarURL: imagePath },
+          (err, user));//rn console.log(err);
+            //if (!err) {
+              return res
+                  .status(201)
+                  .send({ email: user.email, password: user.password });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -168,8 +163,8 @@ class UsersController {
       const { user } = req;
 
       res
-        .status(200)
-        .send({ email: user.email, subscription: user.subscription });
+          .status(200)
+          .send({ email: user.email, subscription: user.subscription });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -179,12 +174,12 @@ class UsersController {
   async updateUser(req, res) {
     try {
       const { user } = req;
-      const i = SUBS.indexOf(user.subscription);
+      const i = Subtitle.indexOf(user.subscription);
 
       const updatedUser = await usersModel.findByIdAndUpdate(
-        user._id,
-        { subscription: SUBS[i + 1] || 'premium' },
-        { new: true, runValidators: true },
+          user._id,
+          { subscription: Subtitle[i + 1] || 'premium' },
+          { new: true, runValidators: true },
       );
 
       res.status(200).send(updatedUser);
@@ -197,13 +192,13 @@ class UsersController {
     try {
       const { filename, path } = req.file;
       const { user } = req;
-      const imageURL = `localhost:3000/images/${filename}`;
+      //const imageURL = `localhost:3000/images/${filename}`;
 
       this.minifyImage(path);
       const updatedUser = await usersModel.findByIdAndUpdate(
-        user._id,
-        { avatarURL: imageURL },
-        { new: true, runValidators: true },
+          user._id,
+          { avatarURL: imageURL },
+          { new: true, runValidators: true },
       );
 
       res.status(200).send(updatedUser);
@@ -217,3 +212,4 @@ function handleValidationError(res, val) {
   return res.status(400).send(val.error.message);
 }
 module.exports = new UsersController();
+
