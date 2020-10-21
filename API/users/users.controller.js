@@ -34,7 +34,6 @@ class UsersController {
     const validation = schema.validate(req.body);
 
     if (validation.error) return handleValidationError(res, validation);
-
     next();
   }
 
