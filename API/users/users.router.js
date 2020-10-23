@@ -5,7 +5,6 @@ const UsersControl = require('./Users.controller');
 const usersRouter = express.Router();
 
 const storage = multer.diskStorage({
-    //destination: './tmp',
     filename: function (req, file, cb) {
         const { fieldname, originalname } = file;
         const { user } = req;

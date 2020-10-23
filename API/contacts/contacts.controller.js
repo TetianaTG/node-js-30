@@ -42,17 +42,15 @@ class ContactsController {
       if (!page && !limit) options = null;
 
       await contactsModel.paginate({}, options, (err, res)); //{
-        //if (!err) {
-         // if (subscription) {
-            //const contactsBySubs = res.docs.filter(
-              // contact => contact.subscription === subscription,
-            //);
-            //contacts = contactsBySubs;
-          //} else {
-          //  contacts = res.docs;
-         // }
-       // }
-     // });
+      const res = await contactsModel.paginate({}, options);
+      if (subscription) {
+        const contactsBySubs = res.docs.filter(
+            contact => contact.subscription === subscription,
+        );
+        contacts = contactsBySubs;
+      } else {
+        contacts = res.docs;
+      }
       res.status(200).send(contacts);
     } catch (err) {
       res.status(400).send(err.message);
@@ -77,12 +75,7 @@ class ContactsController {
         email: newContact.email,
       });
 
-      // if (existedContact)
-      /// return res.status(400).send('Contact with such email already exists');
-
-      await contactsModel.create(newContact, (err, contact));
-      // if (!err)
-      // return res.status(200).send(`Contact ${contact.name} created`);
+      const contact = await contactsModel.create(newContact);
       res.status(200).send(`Contact ${contact.name} created`);
     } catch (err) {
       res.status(400).send(err.message);

@@ -39,15 +39,13 @@ class UsersController {
 
   generateAvatars = async name => {
     try {
-      if (!fs.exists('./tmp')) {
-        fs.mkdir(location, { recursive: true });
+      if (!(await fsPromises.exists('./tmp'))) {
+        await fsPromises.mkdir(location, { recursive: true });
       }
-
-      //const filepath = `tmp/avatar-${name}.jpg`;
       const avatar = Avatar.catBuilder(128);
       const buffer = await avatar.create('gabriel');
       await fsPromises.writeFile(filepath, buffer);
-      this.minifyImage(filepath);
+      await this.minifyImage(filepath);
     } catch (err) {
       console.log(err.message);
     }
@@ -103,7 +101,7 @@ class UsersController {
       const hashedPass = await bcrypt.hash(newUser.password, 10);
 
       await this.generateAvatars(newUser.email);
-      //const imagePath = `localhost:3000/images/${newUser.email}.jpg`;
+      const user = await usersModel.create({ ...newUser, password: hashedPass, avatarURL: imagePath })
 
       usersModel.create(
           { ...newUser, password: hashedPass, avatarURL: imagePath },
@@ -191,9 +189,7 @@ class UsersController {
     try {
       const { filename, path } = req.file;
       const { user } = req;
-      //const imageURL = `localhost:3000/images/${filename}`;
-
-      this.minifyImage(path);
+      await this.minifyImage(path);
       const updatedUser = await usersModel.findByIdAndUpdate(
           user._id,
           { avatarURL: imageURL },

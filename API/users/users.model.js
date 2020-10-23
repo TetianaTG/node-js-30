@@ -17,10 +17,6 @@ const contactsSchema = new Schema(
 );
 
 contactsSchema.plugin(mongoosePaginate);
-//mongoosePaginate.paginate.options = {
-   // limit: 20,
-    //page: 1,
-//};
 
 const contactsModel = mongoose.model('Contacts', contactsSchema);
 
