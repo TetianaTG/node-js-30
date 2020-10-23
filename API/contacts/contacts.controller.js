@@ -40,8 +40,6 @@ class ContactsController {
       let options = { page, limit };
       let contacts;
       if (!page && !limit) options = null;
-
-      await contactsModel.paginate({}, options, (err, res)); //{
       const res = await contactsModel.paginate({}, options);
       if (subscription) {
         const contactsBySubs = res.docs.filter(

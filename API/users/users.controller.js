@@ -99,14 +99,7 @@ class UsersController {
         return res.status(409).send('User with such email already exists');
 
       const hashedPass = await bcrypt.hash(newUser.password, 10);
-
-      await this.generateAvatars(newUser.email);
       const user = await usersModel.create({ ...newUser, password: hashedPass, avatarURL: imagePath })
-
-      usersModel.create(
-          { ...newUser, password: hashedPass, avatarURL: imagePath },
-          (err, user));//rn console.log(err);
-            //if (!err) {
               return res
                   .status(201)
                   .send({ email: user.email, password: user.password });
