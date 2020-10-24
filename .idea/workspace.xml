@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand />
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="92407571-0654-496e-ac22-7bc5a3dc9996" name="Default Changelist" comment="git add" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="dart.analysis.tool.window.visible" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task id="LOCAL-00001" summary="git add">
+      <created>1603506077099</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1603506077100</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="git add" />
+    <option name="LAST_COMMIT_MESSAGE" value="git add" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2" timestamp="1603506084954">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603506084954" />
+  </component>
+</project>
