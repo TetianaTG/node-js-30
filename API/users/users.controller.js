@@ -100,9 +100,9 @@ class UsersController {
 
       const hashedPass = await bcrypt.hash(newUser.password, 10);
       const user = await usersModel.create({ ...newUser, password: hashedPass, avatarURL: imagePath })
-              return res
-                  .status(201)
-                  .send({ email: user.email, password: user.password });
+      return res
+          .status(201)
+          .send({ email: user.email, password: user.password });
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -200,4 +200,3 @@ function handleValidationError(res, val) {
   return res.status(400).send(val.error.message);
 }
 module.exports = new UsersController();
-
