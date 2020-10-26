@@ -63,4 +63,3 @@ class ContacsServer {
 }
 
 new ContacsServer().start();
-
