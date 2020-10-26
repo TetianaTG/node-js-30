@@ -5,7 +5,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92407571-0654-496e-ac22-7bc5a3dc9996" name="Default Changelist" comment="git add" />
+    <list default="true" id="92407571-0654-496e-ac22-7bc5a3dc9996" name="Default Changelist" comment="git add">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/contacts/contacts.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/contacts/contacts.controller.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,12 +17,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectId" id="1jJ0ptfKtLVzzWmySDUmBDrTc5I" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="dart.analysis.tool.window.visible" value="false" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="git add">
       <created>1603506077099</created>
@@ -28,8 +41,27 @@
       <option name="project" value="LOCAL" />
       <updated>1603506077100</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="92407571-0654-496e-ac22-7bc5a3dc9996" name="Default Changelist" comment="git add" />
+      <created>1603507074448</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603507074448</updated>
+      <workItem from="1603507075970" duration="1048000" />
+      <workItem from="1603711459436" duration="852000" />
+    </task>
+    <task id="LOCAL-00002" summary="git add">
+      <created>1603711758527</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1603711758527</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -48,9 +80,13 @@
     <option name="LAST_COMMIT_MESSAGE" value="git add" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="278" y="306" key="Vcs.Push.Dialog.v2" timestamp="1603506084954">
+    <state x="217" y="29" key="DiffContextDialog" timestamp="1603711978418">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="278" y="306" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603506084954" />
+    <state x="217" y="29" key="DiffContextDialog/0.23.1440.852@0.23.1440.852" timestamp="1603711978418" />
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2" timestamp="1603711978453">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603711978453" />
   </component>
 </project>

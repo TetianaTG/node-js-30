@@ -1,4 +1,3 @@
-
 const Joi = require('@hapi/joi');
 const isEmpty = require('lodash.isempty');
 const contactsModel = require('./contacts.model');
