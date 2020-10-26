@@ -21,4 +21,3 @@ contactsSchema.plugin(mongoosePaginate);
 const contactsModel = mongoose.model('Contacts', contactsSchema);
 
 module.exports = contactsModel;
-
