@@ -3,7 +3,9 @@ const ContactsControl = require('./contacts.controller');
 const contactsRouter = express.Router();
 
 contactsRouter.get('/', ContactsControl.getContacts);
-contactsRouter.get('/:contactid', ContactsControl.getContact);
+contactsRout
+
+er.get('/:contactid', ContactsControl.getContact);
 contactsRouter.post(
     '/',
     ContactsControl.validateAddContact,
