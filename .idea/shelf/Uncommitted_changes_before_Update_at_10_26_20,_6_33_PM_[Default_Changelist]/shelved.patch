@@ -1,0 +1,530 @@
+Index: API/contacts/contacts.router.js
+===================================================================
+--- API/contacts/contacts.router.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ API/contacts/contacts.router.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,19 +0,0 @@
+-const express = require('express');
+-const ContactsControl = require('./contacts.controller');
+-const contactsRouter = express.Router();
+-
+-contactsRouter.get('/', ContactsControl.getContacts);
+-contactsRouter.get('/:contactid', ContactsControl.getContact);
+-contactsRouter.post(
+-  '/',
+-  ContactsControl.validateAddContact,
+-  ContactsControl.addContact,
+-);
+-contactsRouter.delete('/:contactid', ContactsControl.removeContact);
+-contactsRouter.patch(
+-  '/:contactid',
+-  ContactsControl.validateUpdateContact,
+-  ContactsControl.updateContact,
+-);
+-
+-module.exports = contactsRouter;
+Index: api/users/users.controller.js
+===================================================================
+--- api/users/users.controller.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ api/users/users.controller.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,157 +0,0 @@
+-const Joi = require('@hapi/joi');
+-const bcrypt = require('bcrypt');
+-const usersModel = require('./users.model');
+-const jwt = require('jsonwebtoken');
+-const val = require('../validation/validation');
+-
+-require('dotenv').config();
+-const Subtitle = ['free', 'pro', 'premium'];
+-
+-class ContactsController {
+-  validateAddUser(req, res, next) {
+-    const schema = Joi.object(val.createValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-  validateLoginUser(req, res, next) {
+-    const schema = Joi.object(val.loginValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  validateUpdateContact(req, res, next) {
+-    const schema = Joi.object(patchValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  async authorize(req, res, next) {
+-    try {
+-      const authHeader = req.get('Authorization') || '';
+-      const token = authHeader.replace('Bearer ', '');
+-
+-      let userId;
+-      const JWT_KEY = process.env.JWT_SECRETKEY;
+-
+-      try {
+-        userId = await jwt.verify(token, JWT_KEY).id;
+-      } catch (err) {
+-        console.log(err);
+-      }
+-      const user = await usersModel.findById(userId);
+-
+-      if (!user || user.token !== token)
+-        return res.status(401).send('Not Authorize');
+-
+-      req.user = user;
+-      req.token = token;
+-
+-      next();
+-    } catch (err) {
+-      console.log(err);
+-    }
+-  }
+-  // POST
+-  async registerUser(req, res) {
+-    try {
+-      const newUser = { ...req.body };
+-      const existedUser = await usersModel.findOne({
+-        email: newUser.email,
+-      });
+-
+-      if (existedUser)
+-        return res.status(409).send('User with such email already exists');
+-
+-      const hashedPass = await bcrypt.hash(newUser.password, 10);
+-
+-      usersModel.create({ ...newUser, password: hashedPass }); //(err, user));
+-        res.status(201).send({ email: user.email, password: user.password });
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  async loginUser(req, res) {
+-    try {
+-      const { email, password } = req.body;
+-      const user = await usersModel.findOne({ email });
+-      const JWT_KEY = process.env.JWT_SECRETKEY;
+-
+-      if (!user) return res.status(401).send('Email or password is wrong');
+-
+-      const isValidPass = await bcrypt.compare(password, user.password);
+-      if (!isValidPass)
+-        return res.status(401).send('Email or password is wrong');
+-
+-      const token = await jwt.sign({ id: user._id }, JWT_KEY, {
+-        expiresIn: '20 days',
+-      });
+-
+-      await usersModel.findByIdAndUpdate(user._id, { token });
+-
+-      res.status(200).send({
+-        user: { email: user.email, subscription: user.subscription },
+-        token,
+-      });
+-    } catch (err) {
+-      console.log(err);
+-      res.status(400).send();
+-    }
+-  }
+-
+-  async logoutUser(req, res) {
+-    try {
+-      const { user } = req;
+-      await usersModel.findByIdAndUpdate(user._id, { token: null });
+-
+-      res.status(204).send();
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // GET
+-  async getCurrentUser(req, res) {
+-    try {
+-      const { user } = req;
+-
+-      res
+-        .status(200)
+-        .send({ email: user.email, subscription: user.subscription });
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // PATCH
+-  async updateUser(req, res) {
+-    try {
+-      const { user } = req;
+-      const i = Subtitle.indexOf(user.subscription);
+-
+-      const updatedUser = await usersModel.findByIdAndUpdate(
+-        user._id,
+-        { subscription: Subtitle [i + 1] || 'premium' },
+-        { new: true, runValidators: true },
+-      );
+-
+-      res.status(200).send(updatedUser);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-}
+-
+-function handleValidationError(res, val) {
+-  return res.status(400).send(val.error.message);
+-}
+-module.exports = new ContactsController();
+Index: api/validation/validation.js
+===================================================================
+--- api/validation/validation.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ api/validation/validation.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,38 +0,0 @@
+-const Joi = require('@hapi/joi');
+-
+-const postValidation = {
+-  name: Joi.string().required(),
+-  email: Joi.string().required(),
+-  phone: Joi.string().required(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-const createValidation = {
+-  email: Joi.string().required(),
+-  password: Joi.string().required(),
+-  name: Joi.string(),
+-  phone: Joi.string().empty(''),
+-};
+-
+-const loginValidation = {
+-  email: Joi.string().required(),
+-  password: Joi.string().required(),
+-};
+-
+-const patchValidation = {
+-  name: Joi.string(),
+-  email: Joi.string(),
+-  phone: Joi.string(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-module.exports = {
+-  createValidation,
+-  loginValidation,
+-  patchValidation,
+-  postValidation,
+-};
+Index: API/index.js
+===================================================================
+--- API/index.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ API/index.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,65 +0,0 @@
+-const morgan = require('morgan');
+-const cors = require('cors');
+-const express = require('express');
+-const mongoose = require('mongoose');
+-const contactsRouter = require('./contacts/contacts.router');
+-
+-require('dotenv').config();
+-
+-class ContacsServer {
+-  constructor() {
+-    this.server = null;
+-  }
+-
+-  initServer() {
+-    this.server = express();
+-  }
+-
+-  initMiddlewares() {
+-    this.server.use(express.json());
+-    this.server.use(morgan('tiny'));
+-    this.server.use(cors());
+-  }
+-
+-  initRoutes() {
+-    this.server.use('/contacts', contactsRouter);
+-  }
+-
+-  async initDatabase() {
+-    try {
+-      await mongoose.connect(
+-        process.env.MONGODB_URL,
+-        {
+-          useNewUrlParser: true,
+-          useUnifiedTopology: true,
+-        },
+-        err => {
+-          if (err) {
+-            console.log(err);
+-            return process.exit(1);
+-          }
+-          console.log('Database connection successful');
+-        },
+-      );
+-    } catch (err) {
+-      console.log(err);
+-    }
+-  }
+-
+-  startListening() {
+-    const PORT = process.env.PORT;
+-    this.server.listen(PORT, () => {
+-      console.log('Server started listening on port', PORT);
+-    });
+-  }
+-
+-  async start() {
+-    this.initServer();
+-    this.initMiddlewares();
+-    this.initRoutes();
+-    await this.initDatabase();
+-    this.startListening();
+-  }
+-}
+-
+-new ContacsServer().start();
+\ No newline at end of file
+Index: API/contacts/contacts.controller.js
+===================================================================
+--- API/contacts/contacts.controller.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ API/contacts/contacts.controller.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,139 +0,0 @@
+-const Joi = require('@hapi/joi');
+-const isEmpty = require('lodash.isempty');
+-const contactsModel = require('./contacts.model');
+-
+-const postValidation = {
+-  name: Joi.string().required(),
+-  email: Joi.string().required(),
+-  phone: Joi.string().required(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-const patchValidation = {
+-  name: Joi.string(),
+-  email: Joi.string(),
+-  phone: Joi.string(),
+-  subscription: Joi.string(),
+-  password: Joi.string(),
+-  token: Joi.string().empty(''),
+-};
+-
+-class ContactsController {
+-  get getContacts() {
+-    return this._getContacts.bind(this);
+-  }
+-  get getContact() {
+-    return this._getContact.bind(this);
+-  }
+-  get addContact() {
+-    return this._addContact.bind(this);
+-  }
+-  get removeContact() {
+-    return this._removeContact.bind(this);
+-  }
+-  get updateContact() {
+-    return this._updateContact.bind(this);
+-  }
+-
+-  validateAddContact(req, res, next) {
+-    const schema = Joi.object(postValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  validateUpdateContact(req, res, next) {
+-    const schema = Joi.object(patchValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
+-  }
+-
+-  // GET
+-  async _getContacts(req, res) {
+-    try {
+-      const contacts = await contactsModel.find();
+-
+-      res.status(200).send(contacts);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  async _getContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-      const contact = await contactsModel.findById(contactid);
+-
+-      res.status(200).send(contact);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // POST
+-  async _addContact(req, res) {
+-    try {
+-      const newContact = { ...req.body };
+-      const existedContact = await contactsModel.findOne({
+-        email: newContact.email,
+-      });
+-
+-      if (existedContact)
+-        return res.status(400).send('Contact with such email already exists');
+-
+-      await contactsModel.create(newContact, (err, contact) => {
+-        if (!err)
+-          return res.status(200).send(`Contact ${contact.name} created`);
+-      });
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // DELETE
+-  async _removeContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-
+-      await contactsModel.findByIdAndRemove(contactid, function (err) {
+-        if (!err) return res.status(200).send(`Contact deleted`);
+-      });
+-
+-      res.status(200).send();
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-
+-  // PATCH
+-  async _updateContact(req, res) {
+-    try {
+-      const { contactid } = req.params;
+-      const updatedContact = { ...req.body };
+-
+-      if (isEmpty(req.body)) return res.status(404).send('missing fields');
+-
+-      const newContact = await contactsModel.findByIdAndUpdate(
+-        contactid,
+-        updatedContact,
+-        { new: true },
+-      );
+-
+-      res.status(200).send(newContact);
+-    } catch (err) {
+-      res.status(400).send(err.message);
+-    }
+-  }
+-}
+-
+-function handleValidationError(res, val) {
+-  return res.status(400).send(val.error.message);
+-}
+-module.exports = new ContactsController();
+Index: API/contacts/contacts.model.js
+===================================================================
+--- API/contacts/contacts.model.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ API/contacts/contacts.model.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,20 +0,0 @@
+-const mongoose = require('mongoose');
+-const Schema = mongoose.Schema;
+-
+-const contactsSchema = new Schema(
+-  {
+-    name: { type: String, required: true },
+-    email: { type: String, required: true },
+-    phone: { type: String, required: true },
+-    subscription: String,
+-    password: String,
+-    token: String,
+-  },
+-  {
+-    versionKey: false,
+-  },
+-);
+-
+-const contactsModel = mongoose.model('Contacts', contactsSchema);
+-
+-module.exports = contactsModel;
+\ No newline at end of file
+Index: api/users/users.model.js
+===================================================================
+--- api/users/users.model.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ api/users/users.model.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,22 +0,0 @@
+-const mongoose = require('mongoose');
+-const Schema = mongoose.Schema;
+-
+-const usersSchema = new Schema(
+-  {
+-    email: String,
+-    password: String,
+-    subscription: {
+-      type: String,
+-      enum: ['free', 'pro', 'premium'],
+-      default: 'free',
+-    },
+-    token: String,
+-  },
+-  {
+-    versionKey: false,
+-  },
+-);
+-
+-const usersModel = mongoose.model('Users', usersSchema, 'users');
+-
+-module.exports = usersModel;
+Index: api/users/users.router.js
+===================================================================
+--- api/users/users.router.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
++++ api/users/users.router.js	(revision 5715229f6739f54032070f6e1d8209767fec7ce2)
+@@ -1,28 +0,0 @@
+-const express = require('express');
+-const UsersControl = require('./Users.controller');
+-const usersRouter = express.Router();
+-
+-usersRouter.post(
+-  '/auth/register',
+-  UsersControl.validateAddUser,
+-  UsersControl.registerUser,
+-);
+-
+-usersRouter.post(
+-  '/auth/login',
+-  UsersControl.validateLoginUser,
+-  UsersControl.loginUser,
+-);
+-
+-usersRouter.post(
+-  '/auth/logout',
+-  UsersControl.authorize,
+-  UsersControl.logoutUser,
+-);
+-usersRouter.get(
+-  '/users/current',
+-  UsersControl.authorize,
+-  UsersControl.getCurrentUser,
+-);
+-usersRouter.patch('/users', UsersControl.authorize, UsersControl.updateUser);
+-module.exports = usersRouter;

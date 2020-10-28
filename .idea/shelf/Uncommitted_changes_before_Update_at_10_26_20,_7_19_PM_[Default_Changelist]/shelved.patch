@@ -1,0 +1,75 @@
+Index: API/contacts/contacts.router.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const express = require('express');\nconst ContactsControl = require('./contacts.controller');\nconst contactsRouter = express.Router();\n\ncontactsRouter.get('/', ContactsControl.getContacts);\ncontactsRouter.get('/:contactid', ContactsControl.getContact);\ncontactsRouter.post(\n  '/',\n  ContactsControl.validateAddContact,\n  ContactsControl.addContact,\n);\ncontactsRouter.delete('/:contactid', ContactsControl.removeContact);\ncontactsRouter.patch(\n  '/:contactid',\n  ContactsControl.validateUpdateContact,\n  ContactsControl.updateContact,\n);\n\nmodule.exports = contactsRouter;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/contacts/contacts.router.js	(revision a144f2a281b101ae27c1105ae9ebe8d63fd74b31)
++++ API/contacts/contacts.router.js	(date 1603732690470)
+@@ -5,15 +5,15 @@
+ contactsRouter.get('/', ContactsControl.getContacts);
+ contactsRouter.get('/:contactid', ContactsControl.getContact);
+ contactsRouter.post(
+-  '/',
+-  ContactsControl.validateAddContact,
+-  ContactsControl.addContact,
++    '/',
++    ContactsControl.validateAddContact,
++    ContactsControl.addContact,
+ );
+ contactsRouter.delete('/:contactid', ContactsControl.removeContact);
+ contactsRouter.patch(
+-  '/:contactid',
+-  ContactsControl.validateUpdateContact,
+-  ContactsControl.updateContact,
++    '/:contactid',
++    ContactsControl.validateUpdateContact,
++    ContactsControl.updateContact,
+ );
+ 
+-module.exports = contactsRouter;
++module.exports = contactsRouter;
+\ No newline at end of file
+Index: API/contacts/contacts.model.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst contactsSchema = new Schema(\n  {\n    name: { type: String, required: true },\n    email: { type: String, required: true },\n    phone: { type: String, required: true },\n    subscription: String,\n    password: String,\n    token: String,\n  },\n  {\n    versionKey: false,\n  },\n);\n\nconst contactsModel = mongoose.model('Contacts', contactsSchema);\n\nmodule.exports = contactsModel;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/contacts/contacts.model.js	(revision a144f2a281b101ae27c1105ae9ebe8d63fd74b31)
++++ API/contacts/contacts.model.js	(date 1603732639390)
+@@ -2,19 +2,19 @@
+ const Schema = mongoose.Schema;
+ 
+ const contactsSchema = new Schema(
+-  {
+-    name: { type: String, required: true },
+-    email: { type: String, required: true },
+-    phone: { type: String, required: true },
+-    subscription: String,
+-    password: String,
+-    token: String,
+-  },
+-  {
+-    versionKey: false,
+-  },
++    {
++        name: { type: String, required: true },
++        email: { type: String, required: true },
++        phone: { type: String, required: true },
++        subscription: String,
++        password: String,
++        token: String,
++    },
++    {
++        versionKey: false,
++    },
+ );
+ 
+ const contactsModel = mongoose.model('Contacts', contactsSchema);
+ 
+-module.exports = contactsModel;
+\ No newline at end of file
++module.exports = contactsModel;

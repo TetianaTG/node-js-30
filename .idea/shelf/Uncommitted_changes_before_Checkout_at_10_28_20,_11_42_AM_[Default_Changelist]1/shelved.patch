@@ -1,0 +1,299 @@
+Index: api/users/users.router.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const express = require('express');\nconst UsersControl = require('./Users.controller');\nconst usersRouter = express.Router();\n\nusersRouter.post(\n  '/auth/register',\n  UsersControl.validateAddUser,\n  UsersControl.registerUser,\n);\n\nusersRouter.post(\n  '/auth/login',\n  UsersControl.validateLoginUser,\n  UsersControl.loginUser,\n);\n\nusersRouter.post(\n  '/auth/logout',\n  UsersControl.authorize,\n  UsersControl.logoutUser,\n);\nusersRouter.get(\n  '/users/current',\n  UsersControl.authorize,\n  UsersControl.getCurrentUser,\n);\nusersRouter.patch('/users', UsersControl.authorize, UsersControl.updateUser);\nmodule.exports = usersRouter;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- api/users/users.router.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ api/users/users.router.js	(date 1603877603587)
+@@ -1,28 +1,47 @@
+ const express = require('express');
++const path = require('path');
++const multer = require('multer');
+ const UsersControl = require('./Users.controller');
+ const usersRouter = express.Router();
+ 
++const storage = multer.diskStorage({
++    filename: function (req, file, cb) {
++        const { fieldname, originalname } = file;
++        const { user } = req;
++        cb(null, fieldname + '-' + user.email + path.extname(originalname));
++    },
++});
++const upload = multer({ storage });
++
+ usersRouter.post(
+-  '/auth/register',
+-  UsersControl.validateAddUser,
+-  UsersControl.registerUser,
++    '/auth/register',
++    UsersControl.validateAddUser,
++    UsersControl.registerUser,
+ );
+ 
+ usersRouter.post(
+-  '/auth/login',
+-  UsersControl.validateLoginUser,
+-  UsersControl.loginUser,
++    '/auth/login',
++    UsersControl.validateLoginUser,
++    UsersControl.loginUser,
+ );
+ 
+ usersRouter.post(
+-  '/auth/logout',
+-  UsersControl.authorize,
+-  UsersControl.logoutUser,
++    '/auth/logout',
++    UsersControl.authorize,
++    UsersControl.logoutUser,
+ );
+ usersRouter.get(
+-  '/users/current',
+-  UsersControl.authorize,
+-  UsersControl.getCurrentUser,
++    '/users/current',
++    UsersControl.authorize,
++    UsersControl.getCurrentUser,
+ );
++usersRouter.get('/users/test', UsersControl.authorize);
+ usersRouter.patch('/users', UsersControl.authorize, UsersControl.updateUser);
++usersRouter.patch(
++    '/users/avatars',
++    UsersControl.authorize,
++    upload.single('avatar'),
++    UsersControl.updateUserAvatar,
++);
+ module.exports = usersRouter;
++
+Index: api/contacts/contacts.router.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const express = require('express');\nconst ContactsControl = require('./contacts.controller');\nconst contactsRouter = express.Router();\n\ncontactsRouter.get('/', ContactsControl.getContacts);\ncontactsRouter.get('/:contactid', ContactsControl.getContact);\ncontactsRouter.post(\n  '/',\n  ContactsControl.validateAddContact,\n  ContactsControl.addContact,\n);\ncontactsRouter.delete('/:contactid', ContactsControl.removeContact);\ncontactsRouter.patch(\n  '/:contactid',\n  ContactsControl.validateUpdateContact,\n  ContactsControl.updateContact,\n);\n\nmodule.exports = contactsRouter;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- api/contacts/contacts.router.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ api/contacts/contacts.router.js	(date 1603877603585)
+@@ -3,17 +3,19 @@
+ const contactsRouter = express.Router();
+ 
+ contactsRouter.get('/', ContactsControl.getContacts);
+-contactsRouter.get('/:contactid', ContactsControl.getContact);
++contactsRout
++
++er.get('/:contactid', ContactsControl.getContact);
+ contactsRouter.post(
+-  '/',
+-  ContactsControl.validateAddContact,
+-  ContactsControl.addContact,
++    '/',
++    ContactsControl.validateAddContact,
++    ContactsControl.addContact,
+ );
+ contactsRouter.delete('/:contactid', ContactsControl.removeContact);
+ contactsRouter.patch(
+-  '/:contactid',
+-  ContactsControl.validateUpdateContact,
+-  ContactsControl.updateContact,
++    '/:contactid',
++    ContactsControl.validateUpdateContact,
++    ContactsControl.updateContact,
+ );
+ 
+ module.exports = contactsRouter;
+Index: API/contacts/contacts.controller.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const Joi = require('@hapi/joi');\nconst isEmpty = require('lodash.isempty');\nconst contactsModel = require('./contacts.model');\nconst val = require('../validation/validation');\n\nclass ContactsController {\n  validateAddContact(req, res, next) {\n    const schema = Joi.object(val.postValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n\n    next();\n  }\n\n\n\n  validateAddContact(req, res, next) {\n    const schema = Joi.object(postValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n\n    next();\n  }\n\n  validateUpdateContact(req, res, next) {\n    const schema = Joi.object(patchValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n\n    next();\n  }\n\n  // GET\n  async getContacts(req, res) {\n    try {\n      const { page, limit, sub: subscription } = req.query;\n      let options = { page, limit };\n      let contacts;\n      if (!page && !limit) options = null;\n      const res = await contactsModel.paginate({}, options);\n      if (subscription) {\n        const contactsBySubs = res.docs.filter(\n            contact => contact.subscription === subscription,\n        );\n        contacts = contactsBySubs;\n      } else {\n        contacts = res.docs;\n      }\n      res.status(200).send(contacts);\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n\n  async getContact(req, res) {\n    try {\n      const { contactid } = req.params;\n      const contact = await contactsModel.findById(contactid);\n\n      res.status(200).send(contact);\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n  // POST\n  async _addContact(req, res) {\n    try {\n      const newContact = { ...req.body };\n      const existedContact = await contactsModel.findOne({\n        email: newContact.email,\n      });\n\n      const contact = await contactsModel.create(newContact);\n      res.status(200).send(`Contact ${contact.name} created`);\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n\n  // DELETE\n  async _removeContact(req, res) {\n    try {\n      const {contactid} = req.params;\n      await contactsModel.findByIdAndRemove(contactid);\n      res.status(200).send('Contact deleted');\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n  // PATCH\n  async _updateContact(req, res) {\n    try {\n      const { contactid } = req.params;\n      const updatedContact = { ...req.body };\n\n      if (isEmpty(req.body)) return res.status(404).send('missing fields');\n\n      const newContact = await contactsModel.findByIdAndUpdate(\n          contactid,\n          updatedContact,\n          { new: true },\n      );\n\n      res.status(200).send(newContact);\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n}\n\nfunction handleValidationError(res, val) {\n  return res.status(400).send(val.error.message);\n}\nmodule.exports = new ContactsController();\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/contacts/contacts.controller.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ API/contacts/contacts.controller.js	(date 1603877992831)
+@@ -1,19 +1,41 @@
+ const Joi = require('@hapi/joi');
+ const isEmpty = require('lodash.isempty');
+ const contactsModel = require('./contacts.model');
+-const val = require('../validation/validation');
++
++const postValidation = {
++  name: Joi.string().required(),
++  email: Joi.string().required(),
++  phone: Joi.string().required(),
++  subscription: Joi.string(),
++  password: Joi.string(),
++  token: Joi.string().empty(''),
++};
++
++const patchValidation = {
++  name: Joi.string(),
++  email: Joi.string(),
++  phone: Joi.string(),
++  subscription: Joi.string(),
++  password: Joi.string(),
++  token: Joi.string().empty(''),
++};
+ 
+ class ContactsController {
+-  validateAddContact(req, res, next) {
+-    const schema = Joi.object(val.postValidation);
+-    const validation = schema.validate(req.body);
+-
+-    if (validation.error) return handleValidationError(res, validation);
+-
+-    next();
++  get getContacts() {
++    return this._getContacts.bind(this);
++  }
++  get getContact() {
++    return this._getContact.bind(this);
++  }
++  get addContact() {
++    return this._addContact.bind(this);
++  }
++  get removeContact() {
++    return this._removeContact.bind(this);
+   }
+-
+-
++  get updateContact() {
++    return this._updateContact.bind(this);
++  }
+ 
+   validateAddContact(req, res, next) {
+     const schema = Joi.object(postValidation);
+@@ -34,28 +56,17 @@
+   }
+ 
+   // GET
+-  async getContacts(req, res) {
++  async _getContacts(req, res) {
+     try {
+-      const { page, limit, sub: subscription } = req.query;
+-      let options = { page, limit };
+-      let contacts;
+-      if (!page && !limit) options = null;
+-      const res = await contactsModel.paginate({}, options);
+-      if (subscription) {
+-        const contactsBySubs = res.docs.filter(
+-            contact => contact.subscription === subscription,
+-        );
+-        contacts = contactsBySubs;
+-      } else {
+-        contacts = res.docs;
+-      }
++      const contacts = await contactsModel.find();
++
+       res.status(200).send(contacts);
+     } catch (err) {
+       res.status(400).send(err.message);
+     }
+   }
+ 
+-  async getContact(req, res) {
++  async _getContact(req, res) {
+     try {
+       const { contactid } = req.params;
+       const contact = await contactsModel.findById(contactid);
+@@ -65,6 +76,7 @@
+       res.status(400).send(err.message);
+     }
+   }
++
+   // POST
+   async _addContact(req, res) {
+     try {
+Index: api/contacts/contacts.model.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const mongoose = require('mongoose');\nconst Schema = mongoose.Schema;\n\nconst contactsSchema = new Schema(\n  {\n    name: { type: String, required: true },\n    email: { type: String, required: true },\n    phone: { type: String, required: true },\n    subscription: String,\n    password: String,\n    token: String,\n  },\n  {\n    versionKey: false,\n  },\n);\n\nconst contactsModel = mongoose.model('Contacts', contactsSchema);\n\nmodule.exports = contactsModel;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- api/contacts/contacts.model.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ api/contacts/contacts.model.js	(date 1603877603584)
+@@ -2,19 +2,20 @@
+ const Schema = mongoose.Schema;
+ 
+ const contactsSchema = new Schema(
+-  {
+-    name: { type: String, required: true },
+-    email: { type: String, required: true },
+-    phone: { type: String, required: true },
+-    subscription: String,
+-    password: String,
+-    token: String,
+-  },
+-  {
+-    versionKey: false,
+-  },
++    {
++        name: { type: String, required: true },
++        email: { type: String, required: true },
++        phone: { type: String, required: true },
++        subscription: String,
++        password: String,
++        token: String,
++    },
++    {
++        versionKey: false,
++    },
+ );
+ 
+ const contactsModel = mongoose.model('Contacts', contactsSchema);
+ 
+-module.exports = contactsModel;
+\ No newline at end of file
++module.exports = contactsModel;
++
+Index: API/users/users.model.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const mongoose = require('mongoose');\nconst mongoosePaginate = require('mongoose-paginate-v2');\nconst Schema = mongoose.Schema;\n\nconst contactsSchema = new Schema(\n    {\n        name: { type: String, required: true },\n        email: { type: String, required: true },\n        phone: { type: String, required: true },\n        subscription: String,\n        password: String,\n        token: String,\n    },\n    {\n        versionKey: false,\n    },\n);\n\ncontactsSchema.plugin(mongoosePaginate);\n\nconst contactsModel = mongoose.model('Contacts', contactsSchema);\n\nmodule.exports = contactsModel;\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/users/users.model.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ API/users/users.model.js	(date 1603877783352)
+@@ -1,23 +1,22 @@
+ const mongoose = require('mongoose');
+-const mongoosePaginate = require('mongoose-paginate-v2');
+ const Schema = mongoose.Schema;
+ 
+-const contactsSchema = new Schema(
+-    {
+-        name: { type: String, required: true },
+-        email: { type: String, required: true },
+-        phone: { type: String, required: true },
+-        subscription: String,
+-        password: String,
+-        token: String,
+-    },
+-    {
+-        versionKey: false,
+-    },
++const usersSchema = new Schema(
++  {
++    email: String,
++    password: String,
++    subscription: {
++      type: String,
++      enum: ['free', 'pro', 'premium'],
++      default: 'free',
++    },
++    token: String,
++  },
++  {
++    versionKey: false,
++  },
+ );
+ 
+-contactsSchema.plugin(mongoosePaginate);
++const usersModel = mongoose.model('Users', usersSchema, 'users');
+ 
+-const contactsModel = mongoose.model('Contacts', contactsSchema);
+-
+-module.exports = contactsModel;
++module.exports = usersModel;

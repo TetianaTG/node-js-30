@@ -1,0 +1,148 @@
+Index: API/users/users.controller.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>require('dotenv').config();\nconst fs = require('fs');\nconst Joi = require('@hapi/joi');\nconst bcrypt = require('bcrypt');\nconst usersModel = require('./users.model');\nconst Avatar = require('avatar-builder');\nconst jwt = require('jsonwebtoken');\nconst val = require('../validation/validation');\nconst { promises: fsPromises } = fs;\nconst imagemin = require('imagemin');\nconst imageminJpegtran = require('imagemin-jpegtran');\nconst Subtitle = ['free', 'pro', 'premium'];\n\nclass UsersController {\n  validateAddUser(req, res, next) {\n    const schema = Joi.object(val.createValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n\n    next();\n  }\n  validateLoginUser(req, res, next) {\n    const schema = Joi.object(val.loginValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n\n    next();\n  }\n\n  validateUpdateContact(req, res, next) {\n    const schema = Joi.object(patchValidation);\n    const validation = schema.validate(req.body);\n\n    if (validation.error) return handleValidationError(res, validation);\n    next();\n  }\n\n  generateAvatars = async name => {\n    try {\n      if (!(await fsPromises.exists('./tmp'))) {\n        await fsPromises.mkdir(location, { recursive: true });\n      }\n      const avatar = Avatar.catBuilder(128);\n      const buffer = await avatar.create('gabriel');\n      await fsPromises.writeFile(filepath, buffer);\n      await this.minifyImage(filepath);\n    } catch (err) {\n      console.log(err.message);\n    }\n  };\n\n  async minifyImage(filepath) {\n    try {\n      await imagemin([filepath], {\n        // destination: 'public/images',\n        plugins: [imageminJpegtran()],\n      });\n    } catch (err) {\n      console.log(err);\n    }\n  }\n\n  async authorize(req, res, next) {\n    try {\n      const token = req.headers.authorization.split(' ')[1];\n      let userId;\n\n      const JWT_KEY = process.env.JWT_SECRETKEY;\n\n      try {\n        userId = await jwt.verify(token, JWT_KEY).id;\n      } catch (err) {\n        console.log(err);\n      }\n      const user = await usersModel.findById(userId);\n\n      if (!user || user.token !== token)\n        return res.status(401).send('Not Authorize');\n\n      req.user = user;\n      req.token = token;\n\n      next();\n    } catch (err) {\n      console.log(err);\n    }\n  }\n  // POST\n  registerUser = async (req, res) => {\n    try {\n      const newUser = { ...req.body };\n      const existedUser = await usersModel.findOne({\n        email: newUser.email,\n      });\n\n      if (existedUser)\n        return res.status(409).send('User with such email already exists');\n\n      const hashedPass = await bcrypt.hash(newUser.password, 10);\n      const user = await usersModel.create({ ...newUser, password: hashedPass, avatarURL: imagePath })\n      return res\n          .status(201)\n          .send({ email: user.email, password: user.password });\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  };\n\n  async loginUser(req, res) {\n    try {\n      const { email, password } = req.body;\n      const user = await usersModel.findOne({ email });\n      const JWT_KEY = process.env.JWT_SECRETKEY;\n\n      if (!user) return res.status(401).send('Email or password is wrong');\n\n      const isValidPass = await bcrypt.compare(password, user.password);\n      if (!isValidPass)\n        return res.status(401).send('Email or password is wrong');\n\n      const token = await jwt.sign({ id: user._id }, JWT_KEY, {\n        expiresIn: '20 days',\n      });\n\n      await usersModel.findByIdAndUpdate(user._id, { token });\n\n      res.status(200).send({\n        user: { email: user.email, subscription: user.subscription },\n        token,\n      });\n    } catch (err) {\n      console.log(err);\n      res.status(400).send();\n    }\n  }\n\n  async logoutUser(req, res) {\n    try {\n      const { user } = req;\n      await usersModel.findByIdAndUpdate(user._id, { token: null });\n\n      res.status(204).send();\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n\n  // GET\n  async getCurrentUser(req, res) {\n    try {\n      const { user } = req;\n\n      res\n          .status(200)\n          .send({ email: user.email, subscription: user.subscription });\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n\n  // PATCH\n  async updateUser(req, res) {\n    try {\n      const { user } = req;\n      const i = Subtitle.indexOf(user.subscription);\n\n      const updatedUser = await usersModel.findByIdAndUpdate(\n          user._id,\n          { subscription: Subtitle[i + 1] || 'premium' },\n          { new: true, runValidators: true },\n      );\n\n      res.status(200).send(updatedUser);\n    } catch (err) {\n      res.status(400).send(err.message);\n    }\n  }\n\n  updateUserAvatar = async (req, res) => {\n    try {\n      const { filename, path } = req.file;\n      const { user } = req;\n      await this.minifyImage(path);\n      const updatedUser = await usersModel.findByIdAndUpdate(\n          user._id,\n          { avatarURL: imageURL },\n          { new: true, runValidators: true },\n      );\n\n      res.status(200).send(updatedUser);\n    } catch (err) {\n      console.log(err);\n    }\n  };\n}\n\nfunction handleValidationError(res, val) {\n  return res.status(400).send(val.error.message);\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/users/users.controller.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ API/users/users.controller.js	(date 1603877992844)
+@@ -1,17 +1,13 @@
+-require('dotenv').config();
+-const fs = require('fs');
+ const Joi = require('@hapi/joi');
+ const bcrypt = require('bcrypt');
+ const usersModel = require('./users.model');
+-const Avatar = require('avatar-builder');
+ const jwt = require('jsonwebtoken');
+ const val = require('../validation/validation');
+-const { promises: fsPromises } = fs;
+-const imagemin = require('imagemin');
+-const imageminJpegtran = require('imagemin-jpegtran');
++
++require('dotenv').config();
+ const Subtitle = ['free', 'pro', 'premium'];
+ 
+-class UsersController {
++class ContactsController {
+   validateAddUser(req, res, next) {
+     const schema = Joi.object(val.createValidation);
+     const validation = schema.validate(req.body);
+@@ -34,6 +30,7 @@
+     const validation = schema.validate(req.body);
+ 
+     if (validation.error) return handleValidationError(res, validation);
++
+     next();
+   }
+ 
+@@ -88,7 +85,7 @@
+     }
+   }
+   // POST
+-  registerUser = async (req, res) => {
++  async registerUser(req, res) {
+     try {
+       const newUser = { ...req.body };
+       const existedUser = await usersModel.findOne({
+@@ -106,7 +103,7 @@
+     } catch (err) {
+       res.status(400).send(err.message);
+     }
+-  };
++  }
+ 
+   async loginUser(req, res) {
+     try {
+@@ -153,8 +150,8 @@
+       const { user } = req;
+ 
+       res
+-          .status(200)
+-          .send({ email: user.email, subscription: user.subscription });
++        .status(200)
++        .send({ email: user.email, subscription: user.subscription });
+     } catch (err) {
+       res.status(400).send(err.message);
+     }
+@@ -167,9 +164,9 @@
+       const i = Subtitle.indexOf(user.subscription);
+ 
+       const updatedUser = await usersModel.findByIdAndUpdate(
+-          user._id,
+-          { subscription: Subtitle[i + 1] || 'premium' },
+-          { new: true, runValidators: true },
++        user._id,
++        { subscription: Subtitle [i + 1] || 'premium' },
++        { new: true, runValidators: true },
+       );
+ 
+       res.status(200).send(updatedUser);
+@@ -177,26 +174,9 @@
+       res.status(400).send(err.message);
+     }
+   }
+-
+-  updateUserAvatar = async (req, res) => {
+-    try {
+-      const { filename, path } = req.file;
+-      const { user } = req;
+-      await this.minifyImage(path);
+-      const updatedUser = await usersModel.findByIdAndUpdate(
+-          user._id,
+-          { avatarURL: imageURL },
+-          { new: true, runValidators: true },
+-      );
+-
+-      res.status(200).send(updatedUser);
+-    } catch (err) {
+-      console.log(err);
+-    }
+-  };
+ }
+ 
+ function handleValidationError(res, val) {
+   return res.status(400).send(val.error.message);
+ }
+-
++module.exports = new ContactsController();
+Index: API/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const morgan = require('morgan');\nconst cors = require('cors');\nconst express = require('express');\nconst mongoose = require('mongoose');\nconst contactsRouter = require('./contacts/contacts.router');\n\nrequire('dotenv').config();\n\nclass ContacsServer {\n  constructor() {\n    this.server = null;\n  }\n\n  initServer() {\n    this.server = express();\n  }\n\n  initMiddlewares() {\n    this.server.use(express.json());\n    this.server.use(morgan('tiny'));\n    this.server.use(cors());\n  }\n\n  initRoutes() {\n    this.server.use('/contacts', contactsRouter);\n  }\n\n  async initDatabase() {\n    try {\n      await mongoose.connect(\n          process.env.MONGODB_URL,\n          {\n            useNewUrlParser: true,\n            useUnifiedTopology: true,\n          },\n          err => {\n            if (err) {\n              console.log(err);\n              return process.exit(1);\n            }\n            console.log('Database connection successful');\n          },\n      );\n    } catch (err) {\n      console.log(err);\n    }\n  }\n\n  startListening() {\n    const PORT = process.env.PORT;\n    this.server.listen(PORT, () => {\n      console.log('Server started listening on port', PORT);\n    });\n  }\n\n  async start() {\n    this.initServer();\n    this.initMiddlewares();\n    this.initRoutes();\n    await this.initDatabase();\n    this.startListening();\n  }\n}\n\nnew ContacsServer().start();\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- API/index.js	(revision 05c58266fd962c38388172d1f33a78b07510b3eb)
++++ API/index.js	(date 1603877992836)
+@@ -28,18 +28,18 @@
+   async initDatabase() {
+     try {
+       await mongoose.connect(
+-          process.env.MONGODB_URL,
+-          {
+-            useNewUrlParser: true,
+-            useUnifiedTopology: true,
+-          },
+-          err => {
+-            if (err) {
+-              console.log(err);
+-              return process.exit(1);
+-            }
+-            console.log('Database connection successful');
+-          },
++        process.env.MONGODB_URL,
++        {
++          useNewUrlParser: true,
++          useUnifiedTopology: true,
++        },
++        err => {
++          if (err) {
++            console.log(err);
++            return process.exit(1);
++          }
++          console.log('Database connection successful');
++        },
+       );
+     } catch (err) {
+       console.log(err);
