@@ -56,6 +56,7 @@ describe('endpoints test', () => {
       });
 
       createdUser.should.have.property('avatarURL').which.is.a.String();
+      createdUser.should.have.property('verificationToken').which.is.a.String();
     });
   });
 });
