@@ -1,62 +1,61 @@
-const request = require('supertest');
-const CS = require('../api/index');
-var should = require('should');
-const userModel = require('../api/users/users.model');
+const sinon = require('sinon');
+const jwt = require('jsonwebtoken');
+const usersModel = require('../api/users/users.model');
+const authControl = require('../api/auth/auth.controller');
 
-const INVALID_TOKEN = 'xxx';
-const VALID_TOKEN =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMjAzMTU5MzkzMmI2MjFmYTE2MzljZCIsImlhdCI6MTU5NjI4Mjg2NCwiZXhwIjoxNTk4MDEwODY0fQ.ngYRpSHZK3e01tvmMWaT8mU-5pUCOl2Vd2nlcAefVXY';
+describe('User tests', () => {
+  let sandbox;
+  let findByIdStub;
+  let next = {};
+  const JWT_KEY = process.env.JWT_SECRETKEY;
 
-// HTTP test
-describe('endpoints test', () => {
-  let app;
+  let req = {
+    body: {},
+    headers: {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMjAzMTU5MzkzMmI2MjFmYTE2MzljZCIsImlhdCI6MTU5NjI4Mjg2NCwiZXhwIjoxNTk4MDEwODY0fQ.ngYRpSHZK3e01tvmMWaT8mU-5pUCOl2Vd2nlcAefVXY',
+    },
+  };
+  res = {
+    status: () => {
+      return {
+        send: () => 'Not Authorize',
+      };
+    },
+  };
 
   before(async () => {
-    const userServer = new CS();
-    app = await userServer.start();
+    sandbox = sinon.createSandbox();
+    sandbox.spy(jwt, 'verify');
+    findByIdStub = sandbox.stub(usersModel, 'findById');
+
+    await authControl.authorize(req, res, next);
   });
 
   after(() => {
-    app.close();
+    sandbox.restore();
   });
 
-  describe('GET /users/сurrent', () => {
-    it('should return 401', async () => {
-      await request(app)
-        .get('/users/current')
-        .auth(INVALID_TOKEN, { type: 'bearer' })
-        .expect(401);
-    });
-  });
-
-  context('When user successful registrate account', () => {
-    after(async () => {
-      await userModel.deleteMany();
+  describe('#authorize', () => {
+    it('should call verify', () => {
+      sinon.assert.calledOnce(jwt.verify);
     });
 
-    it('should return 201', async () => {
-      const response = await request(app)
-        .post('/auth/register')
-        .set('Content-Type', 'application/json')
-        .send({
-          name: 'new user',
-          email: 'test19@mail.com',
-          password: 'some_password',
-        })
-        .expect(201);
+    it('should call findById', () => {
+      sinon.assert.calledOnce(findByIdStub);
+    });
 
-      const responseBody = response.body;
+    it('should pass with valid token', () => {
+      const token = req.headers.authorization.split(' ')[1];
+      sinon.assert.calledOnceWithExactly(jwt.verify, token, JWT_KEY);
+    });
 
-      should.exists(responseBody);
-      responseBody.should.have.property('email').which.is.a.String();
-      responseBody.should.have.property('password').which.is.a.String();
+    it('should never pass without token', () => {
+      sinon.assert.neverCalledWith(jwt.verify, '', JWT_KEY);
+    });
 
-      const createdUser = await userModel.findOne({
-        email: responseBody.email,
-      });
-
-      createdUser.should.have.property('avatarURL').which.is.a.String();
-      createdUser.should.have.property('verificationToken').which.is.a.String();
+    it('should never pass with non-valid token', () => {
+      sinon.assert.neverCalledWith(jwt.verify, 'test', JWT_KEY);
     });
   });
 });
