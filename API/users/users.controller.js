@@ -196,7 +196,7 @@ class UsersController {
   };
 }
 
-function handleValidationError(res, val) {
-  return res.status(400).send(val.error.message);
-}
+//function handleValidationError(res, val) {
+  //return res.status(400).send(val.error.message);
+//}
 
