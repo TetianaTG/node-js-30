@@ -7,8 +7,8 @@
   <component name="ChangeListManager">
     <list default="true" id="92407571-0654-496e-ac22-7bc5a3dc9996" name="Default Changelist" comment="git add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/contacts/contacts.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/API/contacts/contacts.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/acceptence-test.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/tests/acceptence-test.spec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +51,7 @@
       <workItem from="1603507075970" duration="1048000" />
       <workItem from="1603711459436" duration="852000" />
       <workItem from="1603734280665" duration="1024000" />
-      <workItem from="1603874188753" duration="231000" />
+      <workItem from="1603874188753" duration="1467000" />
     </task>
     <task id="LOCAL-00002" summary="git add">
       <created>1603711758527</created>
@@ -67,7 +67,28 @@
       <option name="project" value="LOCAL" />
       <updated>1603734290632</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="git add">
+      <created>1603874911230</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1603874911230</updated>
+    </task>
+    <task id="LOCAL-00005" summary="git add">
+      <created>1603876119057</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1603876119057</updated>
+    </task>
+    <task id="LOCAL-00006" summary="git add">
+      <created>1603876327747</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1603876327747</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -98,13 +119,29 @@
       <screen x="0" y="23" width="1440" height="852" />
     </state>
     <state x="217" y="29" key="DiffContextDialog/0.23.1440.852@0.23.1440.852" timestamp="1603711978418" />
-    <state x="278" y="306" key="Vcs.Push.Dialog.v2" timestamp="1603734294341">
+    <state width="689" height="209" key="GridCell.Tab.0.bottom" timestamp="1603876798920">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="278" y="306" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603734294341" />
-    <state x="501" y="379" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603734063237">
+    <state width="689" height="209" key="GridCell.Tab.0.bottom/0.23.1440.852@0.23.1440.852" timestamp="1603876798920" />
+    <state width="689" height="209" key="GridCell.Tab.0.center" timestamp="1603876798919">
       <screen x="0" y="23" width="1440" height="852" />
     </state>
-    <state x="501" y="379" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1603734063237" />
+    <state width="689" height="209" key="GridCell.Tab.0.center/0.23.1440.852@0.23.1440.852" timestamp="1603876798919" />
+    <state width="689" height="209" key="GridCell.Tab.0.left" timestamp="1603876798919">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state width="689" height="209" key="GridCell.Tab.0.left/0.23.1440.852@0.23.1440.852" timestamp="1603876798919" />
+    <state width="689" height="209" key="GridCell.Tab.0.right" timestamp="1603876798919">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state width="689" height="209" key="GridCell.Tab.0.right/0.23.1440.852@0.23.1440.852" timestamp="1603876798919" />
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2" timestamp="1603876333647">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="278" y="306" key="Vcs.Push.Dialog.v2/0.23.1440.852@0.23.1440.852" timestamp="1603876333647" />
+    <state x="501" y="379" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603876755991">
+      <screen x="0" y="23" width="1440" height="852" />
+    </state>
+    <state x="501" y="379" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.852@0.23.1440.852" timestamp="1603876755991" />
   </component>
 </project>
